@@ -24,7 +24,6 @@ body {
   width: 70%;
   height: 70vh;
   backdrop-filter: blur(15px);
-  border: 1px solid blueviolet;
   display: flex;
   flex-direction: row;
 }
@@ -106,7 +105,6 @@ body {
   display: flex;
   flex-direction: column;
   width: 100%;
-  border: 1px solid brown;
 }
 #create .inputWrp {
   margin-bottom: 20px;
