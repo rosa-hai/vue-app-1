@@ -23,9 +23,10 @@ body {
 #app {
   width: 70%;
   height: 70vh;
-  backdrop-filter: blur(15px);
+  backdrop-filter: blur(30px);
   display: flex;
   flex-direction: row;
+  border: 1px solid white;
 }
 #app h1, #app h2, #app h3 {
   text-align: center;
