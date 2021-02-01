@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Who's the best</title>
+    <link rel="stylesheet" href="assets/styles/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
+          integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
+          crossorigin="anonymous"/>
+    <!-- Latest compiled and minified CSS -->
+
+
+</head>
+<body>
+<div id="app">
+    <div id="battlesList">
+        <div class="battle" v-for="(item, i) in battles" :key="i" @click="setCurrentBattle(item)">
+            <p>{{ item | battleName }}</p>
+        </div>
+        <div class="battle" @click="switchToCreate">
+            <i class="fas fa-plus" id="addIcon"></i>
+        </div>
+    </div>
+    <div class="wrapper">
+        <h1>Who's the best?</h1>
+        <div id="battleContainer">
+            <div v-if="currentBattle">
+                <h2>{{ currentBattle | battleName }}</h2>
+                <h3>{{currentBattle | votes}}</h3>
+                <div id="battleStats">
+                    <p data-color="primary">{{ currentBattle.item_1.name }} <br> {{ statsItem1 }} <br>
+                        <span @click="vote(1)">+1</span>
+                    </p>
+                    <div id="range">
+                        <div class="fill" :style="{width: fill + '%'}"></div>
+                    </div>
+                    <p data-color="secondary">{{ currentBattle.item_2.name }} <br> {{ statsItem2 }}
+                        <br>
+                        <span @click="vote(2)">+1</span>
+                    </p>
+                </div>
+            </div>
+            <div id="create" v-else-if="createBattle">
+                <div><label for="item1"> Premier élément</label>
+                    <div class="inputWrp"><input id="item1" type="text" v-model="newItem1"
+                                                 placeholder="ex Maman">
+                        <div class="focus-border"></div>
+                    </div>
+                </div>
+                <div><label for="item2"> Deuxième élément</label>
+                    <div class="inputWrp">
+                        <input id="item2" type="text" v-model="newItem2" placeholder="ex Papa">
+                        <div class="focus-border"></div>
+                    </div>
+                </div>
+                <div id="submit" @click="newBattle">Let's Battle!</div>
+                <div v-if="message">{{ message }}</div>
+            </div>
+            <div v-else>Choisissez une bataille et voyez le résultat</div>
+        </div>
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js"
+        integrity="sha512-UwcC/iaz5ziHX7V6LjSKaXgCuRRqbTp1QHpbOJ4l1nw2/boCfZ2KlFIqBUA/uRVF0onbREnY9do8rM/uT/ilqw=="
+        crossorigin="anonymous"></script>
+<script>
+    Vue.filter('battleName', function (battle) {
+        return `${battle.item_1.name} -- ${battle.item_2.name}`;
+    });
+    Vue.filter('votes', function (battle) {
+        return `${parseInt(battle.item_1.vote) + parseInt(battle.item_2.vote)} votes`;
+    });
+
+    new Vue({
+        el: '#app',
+        data: {
+            counter: 0,
+            battles: [
+                {
+                    "item_1": {
+                        "name": "Père Noel",
+                        "vote": 10
+                    },
+                    "item_2": {
+                        "name": "Mère Noel",
+                        "vote": 20
+                    }
+                },
+                {
+                    "item_1": {
+                        "name": "Pain au chocolat",
+                        "vote": 1000
+                    },
+                    "item_2": {
+                        "name": "Chocolatine",
+                        "vote": 2
+                    }
+                },
+                {
+                    "item_1": {
+                        "name": "Iron Man",
+                        "vote": 100
+                    },
+                    "item_2": {
+                        "name": "Thor",
+                        "vote": 50
+                    }
+                }
+            ],
+            currentItems: [],
+            currentBattle: null,
+            createBattle: false,
+            newItem1: "",
+            newItem2: "",
+            message: ""
+        },
+        computed: {
+            length: function () {
+                return this.list.length
+            },
+            fill: function () {
+                const totalCount = parseInt(this.currentBattle.item_1.vote) + parseInt(this.currentBattle.item_2.vote);
+                return (this.currentBattle.item_1.vote / totalCount) * 100 || 0;
+            },
+            statsItem1: function () {
+                return `${parseInt(this.fill)}%`;
+            },
+            statsItem2: function () {
+                return `${parseInt(this.currentBattle.item_1.vote) + parseInt(this.currentBattle.item_2.vote) > 0 ? 100 - parseInt(this.fill) : 0}%`;
+            }
+        },
+        methods: {
+            setCurrentBattle: function (battle) {
+                this.currentBattle = battle
+            },
+            vote: function (selectedItem) {
+                switch (selectedItem) {
+                    case 1:
+                        this.currentBattle.item_1.vote++
+                        break;
+                    case 2:
+                        this.currentBattle.item_2.vote++
+                        break;
+                }
+            },
+            switchToCreate: function () {
+                this.message = ""
+                this.currentBattle = null
+                this.createBattle = true
+            },
+            newBattle: function () {
+                if (this.newItem1 !== "" || this.newItem2 !== "") {
+                    const newB = {
+                        item_1: {
+                            name: this.newItem1,
+                            vote: 0,
+                        },
+                        item_2: {
+                            name: this.newItem2,
+                            vote: 0,
+                        }
+                    }
+                    this.battles.push(newB)
+                    this.currentBattle = newB
+                    this.createBattle = false
+                } else {
+                    this.message = "Remplissez bien tous les champs"
+                    console.log(this.newItem2)
+                    console.log(this.newItem1)
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

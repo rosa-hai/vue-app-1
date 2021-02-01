@@ -1,0 +1,32 @@
+[
+  {
+    "item_1": {
+      "name": "Père Noel",
+      "vote": "10"
+    },
+    "item_2": {
+      "name": "Mère Noel",
+      "vote": "20"
+    }
+  },
+  {
+    "item_1": {
+      "name": "Pain au chocolat",
+      "vote": "1000"
+    },
+    "item_2": {
+      "name": "Chocolatine",
+      "vote": "2"
+    }
+  },
+  {
+    "item_1": {
+      "name": "Iron Man",
+      "vote": "1000"
+    },
+    "item_2": {
+      "name": "Thor",
+      "vote": "2"
+    }
+  }
+]
